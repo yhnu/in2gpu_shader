@@ -94,7 +94,10 @@ namespace lab{
 
 		//build OpenGL program object and link all the OpenGL shader objects
 		unsigned int gl_program_object = glCreateProgram();
-		for(std::vector<unsigned int>::const_iterator it=shader_objects.begin(); it!=shader_objects.end(); it++) glAttachShader(gl_program_object,(*it));
+		for(std::vector<unsigned int>::const_iterator it=shader_objects.begin(); it!=shader_objects.end(); it++) 
+		{
+			glAttachShader(gl_program_object,(*it));
+		}
 		glLinkProgram(gl_program_object);												
 		glGetProgramiv(gl_program_object, GL_LINK_STATUS, &link_result);
 
