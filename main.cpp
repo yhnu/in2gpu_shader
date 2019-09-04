@@ -23,7 +23,7 @@ private:
 	unsigned int gl_program_shader_rim;									//id obiect shader rim
 	unsigned int gl_program_shader_phong;							    //id obiect shader phong(for sun)
 	unsigned int rtt_program_shader;									//render to texture 
-
+	unsigned int gl_program_shader_base;								//基础Shader
 
 	unsigned int gl_program_shader_curent;									//id obiect shader curent
 	unsigned int mesh_vbo, mesh_ibo, mesh_vao, mesh_num_indices;			//containers 
@@ -58,9 +58,10 @@ public:
 		gl_program_shader_rim = lab::loadShader("shadere\\shader_rim_vertex.glsl", "shadere\\shader_rim_fragment.glsl");
 		gl_program_shader_phong = lab::loadShader("shadere\\shader_phong_vertex.glsl", "shadere\\shader_phong_fragment.glsl");
 		gl_program_shader_phong = lab::loadShader("shadere\\shader_phong_vertex.glsl", "shadere\\shader_phong_fragment.glsl");
+		gl_program_shader_base = lab::loadShader("shadere\\Vertex_Shader.glsl", "shadere\\Fragment_Shader.glsl");
 		
 		//set current shader
-		gl_program_shader_curent = gl_program_shader_rim;
+		gl_program_shader_curent = gl_program_shader_base;
 		
 		//load shader
 		lab::loadObj("resurse\\tree1_trunk.obj",mesh_vao, mesh_vbo, mesh_ibo, mesh_num_indices);
@@ -253,24 +254,26 @@ public:
 			//clear screen
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glUseProgram(rtt_program_shader);
+			glUseProgram(gl_program_shader_base);
+			//draw 3 vertices as triangles
+   			glDrawArrays(GL_TRIANGLES, 0, 3);
+			
+			// glActiveTexture(GL_TEXTURE0 + 1);
+			// glBindTexture(GL_TEXTURE_2D, fbo.getColorTexture());
+			// glUniform1i(glGetUniformLocation(rtt_program_shader, "texture_color"), 1);
+			// glActiveTexture(GL_TEXTURE0 + 2);
+			// glBindTexture(GL_TEXTURE_2D, fbo.getDepthTexture());
+			// glUniform1i(glGetUniformLocation(rtt_program_shader, "texture_depth"), 2);
+			// glUniform1i(glGetUniformLocation(rtt_program_shader, "screen_width"), screen_width);
+			// glUniform1i(glGetUniformLocation(rtt_program_shader, "screen_height"), screen_height);
 
-			glActiveTexture(GL_TEXTURE0 + 1);
-			glBindTexture(GL_TEXTURE_2D, fbo.getColorTexture());
-			glUniform1i(glGetUniformLocation(rtt_program_shader, "texture_color"), 1);
-			glActiveTexture(GL_TEXTURE0 + 2);
-			glBindTexture(GL_TEXTURE_2D, fbo.getDepthTexture());
-			glUniform1i(glGetUniformLocation(rtt_program_shader, "texture_depth"), 2);
-			glUniform1i(glGetUniformLocation(rtt_program_shader, "screen_width"), screen_width);
-			glUniform1i(glGetUniformLocation(rtt_program_shader, "screen_height"), screen_height);
-
-			//c is a control variable - change it manually otherwise implement it :)
-			//0 is blur 
-			//1 is depth
-			//2 is color texture
-			glUniform1i(glGetUniformLocation(rtt_program_shader, "c"), 1);
-			glBindVertexArray(rtt_vao);
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			// //c is a control variable - change it manually otherwise implement it :)
+			// //0 is blur 
+			// //1 is depth
+			// //2 is color texture
+			// glUniform1i(glGetUniformLocation(rtt_program_shader, "c"), 1);
+			// glBindVertexArray(rtt_vao);
+			// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		}
 
 	}
