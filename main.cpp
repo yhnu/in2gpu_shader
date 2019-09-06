@@ -6,7 +6,7 @@
 #include "lab_texture_loader.hpp"
 #include "lab_framebuffer.hpp"
 #include <ctime>
-
+#include "lab_game_models.hpp"
 
 class Laborator : public lab::glut::WindowListener{
 
@@ -31,6 +31,9 @@ private:
 	unsigned int mesh_vbo3, mesh_ibo3, mesh_vao3, mesh_num_indices3;		//containers 
 	unsigned int ground_vbo, ground_ibo, ground_vao, ground_num_indices;	//containers 
 	unsigned int rtt_vbo, rtt_ibo, rtt_vao, rtt_num_indices;				//geometrie suport pentru render-to-texture 
+	//
+	Models gameModels;
+
 	//in world coords
 	glm::vec3 light_position;
 	glm::vec3 eye_position;
@@ -62,6 +65,9 @@ public:
 		
 		//set current shader
 		gl_program_shader_curent = gl_program_shader_base;
+
+		gameModels = new Models::GameModels();
+		gameModels->CreateTriangleModel("triangle1");
 		
 		//load shader
 		lab::loadObj("resurse\\tree1_trunk.obj",mesh_vao, mesh_vbo, mesh_ibo, mesh_num_indices);
@@ -254,9 +260,9 @@ public:
 			//clear screen
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glUseProgram(gl_program_shader_base);
-			//draw 3 vertices as triangles
-   			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glBindVertexArray(gameModels->GetModel("triangle1"));
+  			glUseProgram(gl_program_shader_base);
+  			glDrawArrays(GL_TRIANGLES, 0, 3);
 			
 			// glActiveTexture(GL_TEXTURE0 + 1);
 			// glBindTexture(GL_TEXTURE_2D, fbo.getColorTexture());
